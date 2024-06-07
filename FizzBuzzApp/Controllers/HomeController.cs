@@ -13,7 +13,7 @@ namespace FizzBuzzApp.Controllers
 
         public HomeController(IFizzBuzzService fizzBuzzService)
         {
-            _fizzBuzzService = fizzBuzzService;
+            _fizzBuzzService = fizzBuzzService ?? throw new ArgumentNullException(nameof(fizzBuzzService));
             _finalModel = new List<FizzBuzzModel>();
             Console.WriteLine("Hello, World!");
             ModelState.AddModelError("Number", "I got refreshed");
@@ -56,10 +56,7 @@ namespace FizzBuzzApp.Controllers
         private void InitializeFinalModel()
         {
             // Check if _finalModel is null and initialize it if needed
-            if (_finalModel == null)
-            {
-                _finalModel = new List<FizzBuzzModel>();
-            }
+            _finalModel ??= new List<FizzBuzzModel>();
         }
     }
 }
