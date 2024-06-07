@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FizzBuzzApp.Interfaces;
 using FizzBuzzApp.Models;
+using System;
+using System.Collections.Generic;
 
 namespace FizzBuzzApp.Controllers
 {
@@ -13,16 +15,12 @@ namespace FizzBuzzApp.Controllers
         {
             _fizzBuzzService = fizzBuzzService;
             _finalModel = new List<FizzBuzzModel>();
-
             Console.WriteLine("Hello, World!");
-            ModelState.AddModelError("Number", "i got refreshed");
-
+            ModelState.AddModelError("Number", "I got refreshed");
         }
 
         public IActionResult Index()
         {
-            Console.WriteLine("iam getting model from session");
-            HttpContext.Session.SetObject("FizzBuzzModel", _finalModel);
             return View();
         }
 
@@ -35,13 +33,33 @@ namespace FizzBuzzApp.Controllers
                 return View();
             }
 
-            Console.WriteLine("iam setting model from session");
-            _finalModel = HttpContext.Session.GetObject<List<FizzBuzzModel>>("FizzBuzzModel");
+            InitializeFinalModel();
+
+            var sessionModel = HttpContext.Session.GetObject<List<FizzBuzzModel>>("FizzBuzzModel");
+
+            if (sessionModel != null && sessionModel.Count > 0)
+            {
+                _finalModel.AddRange(sessionModel);
+            }
 
             var model = _fizzBuzzService.GenerateFizzBuzz(number);
-            _finalModel.AddRange(model);
+
+            if (model != null && model.Count > 0)
+            {
+                _finalModel.AddRange(model);
+            }
+
             HttpContext.Session.SetObject("FizzBuzzModel", _finalModel);
             return View(_finalModel);
+        }
+
+        private void InitializeFinalModel()
+        {
+            // Check if _finalModel is null and initialize it if needed
+            if (_finalModel == null)
+            {
+                _finalModel = new List<FizzBuzzModel>();
+            }
         }
     }
 }
