@@ -1,4 +1,4 @@
-﻿namespace Fizz_Buzz_Aviva.Models;
+﻿namespace FizzBuzzApp.Models;
 
 public class ErrorViewModel
 {

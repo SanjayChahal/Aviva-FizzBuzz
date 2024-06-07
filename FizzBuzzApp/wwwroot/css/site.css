@@ -16,3 +16,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+.fizz {
+    color: blue;
+}
+
+.buzz {
+    color: green;
+}
