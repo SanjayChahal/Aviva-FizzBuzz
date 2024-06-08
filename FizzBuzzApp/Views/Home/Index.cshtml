@@ -18,3 +18,16 @@
     </ul>
 }
 
+@if (Model != null && Model.Count > 0)
+{
+    <nav aria-label="Pagination">
+        <ul class="pagination">
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.PageNumber ? "active" : "")">
+                    <a class="page-link" href="/Home/Index?pageNumber=@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
