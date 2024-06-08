@@ -20,7 +20,7 @@ namespace FizzBuzzApp.Controllers
             _finalModel = new List<FizzBuzzModel>();
         }
 
-        public IActionResult Index(int pageNumber = 1, int pageSize = 10)
+        public IActionResult Index(int pageNumber = 1, int pageSize = 5)
         {
             Console.WriteLine("I am on page number redirection");
 

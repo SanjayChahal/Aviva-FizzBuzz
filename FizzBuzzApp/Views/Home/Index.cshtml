@@ -22,10 +22,22 @@
 {
     <nav aria-label="Pagination">
         <ul class="pagination">
+            @if (ViewBag.PageNumber > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="/Home/Index?pageNumber=@(ViewBag.PageNumber - 1)">Previous</a>
+                </li>
+            }
             @for (int i = 1; i <= ViewBag.TotalPages; i++)
             {
                 <li class="page-item @(i == ViewBag.PageNumber ? "active" : "")">
                     <a class="page-link" href="/Home/Index?pageNumber=@i">@i</a>
+                </li>
+            }
+            @if (ViewBag.PageNumber < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="/Home/Index?pageNumber=@(ViewBag.PageNumber + 1)">Next</a>
                 </li>
             }
         </ul>
