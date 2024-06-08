@@ -10,14 +10,14 @@ namespace FizzBuzzApp.Controllers
     public class HomeController : Controller
     {
         private readonly IFizzBuzzService _fizzBuzzService;
+        private readonly ISessionService _sessionService;
         private List<FizzBuzzModel> _finalModel;
 
-        public HomeController(IFizzBuzzService fizzBuzzService)
+        public HomeController(IFizzBuzzService fizzBuzzService, ISessionService sessionService)
         {
             _fizzBuzzService = fizzBuzzService ?? throw new ArgumentNullException(nameof(fizzBuzzService));
+            _sessionService = sessionService ?? throw new ArgumentNullException(nameof(sessionService));
             _finalModel = new List<FizzBuzzModel>();
-            Console.WriteLine("Hello, World!");
-            ModelState.AddModelError("Number", "I got refreshed");
         }
 
         public IActionResult Index(int pageNumber = 1, int pageSize = 10)
@@ -25,7 +25,7 @@ namespace FizzBuzzApp.Controllers
             Console.WriteLine("I am on page number redirection");
 
             // Retrieve the session data here
-            var sessionModel = HttpContext.Session.GetObject<List<FizzBuzzModel>>("FizzBuzzModel");
+            var sessionModel = _sessionService.GetFizzBuzzModel();
 
             if (sessionModel != null)
             {
@@ -52,7 +52,7 @@ namespace FizzBuzzApp.Controllers
         [HttpPost]
         public IActionResult Index(int number)
         {
-            Console.WriteLine("IAction index ");
+            Console.WriteLine("ActionResult Index(int number)");
 
             if (number < 1 || number > 1000)
             {
@@ -60,9 +60,7 @@ namespace FizzBuzzApp.Controllers
                 return View();
             }
 
-            InitializeFinalModel();
-
-            var sessionModel = HttpContext.Session.GetObject<List<FizzBuzzModel>>("FizzBuzzModel");
+            var sessionModel = _sessionService.GetFizzBuzzModel();
 
             if (sessionModel != null && sessionModel.Count > 0)
             {
@@ -76,14 +74,8 @@ namespace FizzBuzzApp.Controllers
                 _finalModel.AddRange(model);
             }
 
-            HttpContext.Session.SetObject("FizzBuzzModel", _finalModel);
+            _sessionService.SetFizzBuzzModel(_finalModel);
             return RedirectToAction("Index");
-        }
-
-        private void InitializeFinalModel()
-        {
-            // Ensure _finalModel is initialized
-            _finalModel ??= new List<FizzBuzzModel>();
         }
     }
 }

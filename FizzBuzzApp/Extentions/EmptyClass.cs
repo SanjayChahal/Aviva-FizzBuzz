@@ -17,5 +17,3 @@ namespace FizzBuzzApp
         }
     }
 }
-
-
