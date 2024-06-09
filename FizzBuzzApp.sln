@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 25.0.1706.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FizzBuzzApp", "FizzBuzzApp\FizzBuzzApp.csproj", "{65A7303C-BB94-4196-A287-3789BA32B61E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FizzBuzzApp.Core", "FizzBuzzApp\FizzBuzzApp.Core.csproj", "{65A7303C-BB94-4196-A287-3789BA32B61E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiZZBuzzAppTest", "FiZZBuzzAppTest\FiZZBuzzAppTest.csproj", "{F04C2B6D-75C0-431F-BD65-56327E98B182}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FizzBuzzApp.Infrastructure", "FizzBuzzApp.Infrastructure\FizzBuzzApp.Infrastructure.csproj", "{14EFCC11-5640-4560-8A3B-C3160D4CE8D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{65A7303C-BB94-4196-A287-3789BA32B61E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65A7303C-BB94-4196-A287-3789BA32B61E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65A7303C-BB94-4196-A287-3789BA32B61E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F04C2B6D-75C0-431F-BD65-56327E98B182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F04C2B6D-75C0-431F-BD65-56327E98B182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F04C2B6D-75C0-431F-BD65-56327E98B182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F04C2B6D-75C0-431F-BD65-56327E98B182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14EFCC11-5640-4560-8A3B-C3160D4CE8D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14EFCC11-5640-4560-8A3B-C3160D4CE8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14EFCC11-5640-4560-8A3B-C3160D4CE8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14EFCC11-5640-4560-8A3B-C3160D4CE8D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

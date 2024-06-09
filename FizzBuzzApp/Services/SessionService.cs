@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using FizzBuzzApp.Interfaces;
 using FizzBuzzApp.Models;
-using Microsoft.AspNetCore.Http;
-
+ 
 namespace FizzBuzzApp.Services
 {
     public class SessionService : ISessionService
@@ -27,3 +26,5 @@ namespace FizzBuzzApp.Services
         }
     }
 }
+
+
