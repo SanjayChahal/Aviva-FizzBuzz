@@ -10,7 +10,6 @@ namespace FizzBuzzApp.Core.Interfaces
         public int GetTotalPages(List<FizzBuzzModel> allModels, int pageSize);
         public List<FizzBuzzModel> GetSavedSessionData();
         public void SaveModelData(List<FizzBuzzModel> model);
-
     }
 }
 

@@ -16,7 +16,6 @@ namespace FizzBuzzApp.Infrastructure.Services
         {
             _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
             _contaxtService = contaxtService ?? throw new ArgumentNullException(nameof(contaxtService));
-
         }
 
         public List<FizzBuzzModel> GenerateFizzBuzz(int number)

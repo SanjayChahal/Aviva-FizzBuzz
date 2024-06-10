@@ -18,4 +18,8 @@
     <ProjectReference Include="..\FizzBuzzApp.Infrastructure\FizzBuzzApp.Infrastructure.csproj" />
     <ProjectReference Include="..\FizzBuzzApp.Core\FizzBuzzApp.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
 </Project>

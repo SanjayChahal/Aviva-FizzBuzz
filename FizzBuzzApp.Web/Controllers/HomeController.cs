@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FizzBuzzApp.Core.Interfaces;
 using FizzBuzzApp.Core.Models;
-using System;
-using System.Collections.Generic;
 
-namespace FizzBuzzApp.Controllers
+namespace FizzBuzzApp.Web
 {
     public class HomeController : Controller
     {
