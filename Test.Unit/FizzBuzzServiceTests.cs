@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FizzBuzzApp.Core;
 using FizzBuzzApp.Core.Common;
 using FizzBuzzApp.Core.Interfaces;
 using FizzBuzzApp.Core.Models;
@@ -11,80 +12,68 @@ namespace FizzBuzzApp.Tests
 {
     public class FizzBuzzServiceTests
     {
-        [Fact]
-        public void GenerateFizzBuzz_NumberDivisibleBy3_ReturnsFizz()
+        private readonly Mock<IDateTimeProvider> _dateTimeProviderMock;
+        private readonly Mock<IHttpContextDataService> _contextServiceMock;
+        private readonly FizzBuzzService _service;
+
+        public FizzBuzzServiceTests()
+        {
+            _dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            _contextServiceMock = new Mock<IHttpContextDataService>();
+            _service = new FizzBuzzService(_dateTimeProviderMock.Object, _contextServiceMock.Object);
+        }
+
+        [Theory]
+        [InlineData(3, "Mizz", ColorEnum.Green, DayOfWeek.Monday)]
+        [InlineData(5, "Tuzz", ColorEnum.Blue, DayOfWeek.Tuesday)]
+        [InlineData(15, "Wizz Wuzz", ColorEnum.Red, DayOfWeek.Wednesday)]
+        [InlineData(7, "7", ColorEnum.Black, DayOfWeek.Thursday)]
+        public void GenerateFizzBuzz_VariousNumbers_ReturnsExpectedResult(int number, string expectedOutput, ColorEnum expectedColor, DayOfWeek dayOfWeek)
         {
             // Arrange
-            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-            dateTimeProviderMock.Setup(m => m.CurrentDayOfWeek).Returns(DayOfWeek.Monday);
-
-            var contextServiceMock = new Mock<IHttpContextDataService>();
-            var service = new FizzBuzzService(dateTimeProviderMock.Object, contextServiceMock.Object);
+            _dateTimeProviderMock.Setup(m => m.CurrentDayOfWeek).Returns(dayOfWeek);
 
             // Act
-            var result = service.GenerateFizzBuzz(3);
+            var result = _service.GenerateFizzBuzz(number);
 
             // Assert
             Assert.Single(result);
-            Assert.Equal("Mizz", result[0].Output);
-            Assert.Equal(ColorEnum.Green, result[0].Color);
+            Assert.Equal(expectedOutput, result[0].Output);
+            Assert.Equal(expectedColor, result[0].Color);
         }
 
         [Fact]
-        public void GenerateFizzBuzz_NumberDivisibleBy5_ReturnsTuzz()
+        public void GetSavedSessionData_ReturnsCorrectData()
         {
             // Arrange
-            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-            dateTimeProviderMock.Setup(m => m.CurrentDayOfWeek).Returns(DayOfWeek.Tuesday);
-
-            var contextServiceMock = new Mock<IHttpContextDataService>();
-            var service = new FizzBuzzService(dateTimeProviderMock.Object, contextServiceMock.Object);
+            var expectedData = new List<FizzBuzzModel>
+            {
+                new FizzBuzzModel { Number = 1, Output = "1", Color = ColorEnum.Black }
+            };
+            _contextServiceMock.Setup(m => m.GetData<List<FizzBuzzModel>>(Constants.SessionKeys.FizzBuzzModelKey))
+                               .Returns(expectedData);
 
             // Act
-            var result = service.GenerateFizzBuzz(5);
+            var result = _service.GetSavedSessionData();
 
             // Assert
-            Assert.Single(result);
-            Assert.Equal("Tuzz", result[0].Output);
-            Assert.Equal(ColorEnum.Blue, result[0].Color);
+            Assert.Equal(expectedData, result);
         }
 
         [Fact]
-        public void GenerateFizzBuzz_NumberDivisibleBy3And5_ReturnsWizzWuzz()
+        public void SaveModelData_ValidData_CallsSaveData()
         {
             // Arrange
-            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-            dateTimeProviderMock.Setup(m => m.CurrentDayOfWeek).Returns(DayOfWeek.Wednesday);
-
-            var contextServiceMock = new Mock<IHttpContextDataService>();
-            var service = new FizzBuzzService(dateTimeProviderMock.Object, contextServiceMock.Object);
-
-            // Act
-            var result = service.GenerateFizzBuzz(15);
-
-            // Assert
-            Assert.Single(result);
-            Assert.Equal("Wizz Wuzz", result[0].Output);
-            Assert.Equal(ColorEnum.Red, result[0].Color);
-        }
-
-        [Fact]
-        public void GenerateFizzBuzz_NumberNotDivisibleBy3Or5_ReturnsNumber()
-        {
-            // Arrange
-            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-            dateTimeProviderMock.Setup(m => m.CurrentDayOfWeek).Returns(DayOfWeek.Thursday);
-
-            var contextServiceMock = new Mock<IHttpContextDataService>();
-            var service = new FizzBuzzService(dateTimeProviderMock.Object, contextServiceMock.Object);
+            var dataToSave = new List<FizzBuzzModel>
+            {
+                new FizzBuzzModel { Number = 1, Output = "1", Color = ColorEnum.Black }
+            };
 
             // Act
-            var result = service.GenerateFizzBuzz(7);
+            _service.SaveModelData(dataToSave);
 
             // Assert
-            Assert.Single(result);
-            Assert.Equal("7", result[0].Output);
-            Assert.Equal(ColorEnum.Black, result[0].Color);
+            _contextServiceMock.Verify(m => m.SaveData(Constants.SessionKeys.FizzBuzzModelKey, dataToSave), Times.Once);
         }
 
         [Fact]
@@ -97,12 +86,8 @@ namespace FizzBuzzApp.Tests
                 allModels.Add(new FizzBuzzModel { Number = i, Output = i.ToString(), Color = ColorEnum.Black });
             }
 
-            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-            var contextServiceMock = new Mock<IHttpContextDataService>();
-            var service = new FizzBuzzService(dateTimeProviderMock.Object, contextServiceMock.Object);
-
             // Act
-            var result = service.GetPagedFizzBuzzModel(allModels, 2, 20);
+            var result = _service.GetPagedFizzBuzzModel(allModels, 2, 20);
 
             // Assert
             Assert.Equal(20, result.Count);
@@ -120,15 +105,31 @@ namespace FizzBuzzApp.Tests
                 allModels.Add(new FizzBuzzModel { Number = i, Output = i.ToString(), Color = ColorEnum.Black });
             }
 
-            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-            var contextServiceMock = new Mock<IHttpContextDataService>();
-            var service = new FizzBuzzService(dateTimeProviderMock.Object, contextServiceMock.Object);
-
             // Act
-            var totalPages = service.GetTotalPages(allModels, 20);
+            var totalPages = _service.GetTotalPages(allModels, 20);
 
             // Assert
             Assert.Equal(5, totalPages);
+        }
+
+        [Fact]
+        public void GetTotalPages_EmptyList_ReturnsZero()
+        {
+            // Arrange
+            var allModels = new List<FizzBuzzModel>();
+
+            // Act
+            var totalPages = _service.GetTotalPages(allModels, 20);
+
+            // Assert
+            Assert.Equal(0, totalPages);
+        }
+
+        [Fact]
+        public void GetTotalPages_NullList_ThrowsArgumentNullException()
+        {
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => _service.GetTotalPages(null, 20));
         }
     }
 }
