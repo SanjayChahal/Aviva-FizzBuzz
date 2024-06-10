@@ -1,56 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FizzBuzzApp.Core.Interfaces;
 using FizzBuzzApp.Core.Models;
-using FizzBuzzApp.Core;
+using System;
+using System.Collections.Generic;
 
 namespace FizzBuzzApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IFizzBuzzService _fizzBuzzService;
-        private readonly IHttpContextDataService _dataService;
-        private List<FizzBuzzModel> _finalModel;
+        private List<FizzBuzzModel> _fizzBuzzModel;
 
-        public HomeController(IFizzBuzzService fizzBuzzService, IHttpContextDataService sessionService)
+        public HomeController(IFizzBuzzService fizzBuzzService)
         {
+            Console.WriteLine("HomeController initialized");
+
             _fizzBuzzService = fizzBuzzService ?? throw new ArgumentNullException(nameof(fizzBuzzService));
-            _dataService = sessionService ?? throw new ArgumentNullException(nameof(sessionService));
-            _finalModel = new List<FizzBuzzModel>();
+            _fizzBuzzModel = new List<FizzBuzzModel>();
         }
 
         public IActionResult Index(int pageNumber = 1, int pageSize = 20)
         {
+            Console.WriteLine("Index GET method called");
 
-            // Retrieve the session data here
+            //Get saved fizze Buzz model
+            _fizzBuzzModel = _fizzBuzzService.GetSavedSessionData() ?? new List<FizzBuzzModel>();
 
-            var sessionModel = _dataService.GetData<List<FizzBuzzModel>>(Constants.SessionKeys.FizzBuzzModelKey);
-            
-            if (sessionModel != null)
-            {
-                _finalModel = sessionModel;
-            }
+            var modelSubset = _fizzBuzzService.GetPagedFizzBuzzModel(_fizzBuzzModel, pageNumber, pageSize);
 
-            // Calculate the start index based on page number and page size
-            int startIndex = (pageNumber - 1) * pageSize;
-
-            // Get a subset of FizzBuzzModel based on pagination parameters
-            var modelSubset = _finalModel.Skip(startIndex).Take(pageSize).ToList();
-
-            // Calculate total number of pages
-            int totalPages = (int)Math.Ceiling((double)_finalModel.Count / pageSize);
-
-            // Set pagination related data in ViewBag
+            ViewBag.TotalPages = _fizzBuzzService.GetTotalPages(_fizzBuzzModel, pageSize);
             ViewBag.PageNumber = pageNumber;
-            ViewBag.TotalPages = totalPages;
 
-            // Pass the subset model to the view
             return View(modelSubset);
         }
 
         [HttpPost]
         public IActionResult Index(int number)
         {
-            Console.WriteLine("ActionResult Index(int number)");
+            Console.WriteLine("Index POST method called");
 
             if (number < 1 || number > 1000)
             {
@@ -58,22 +45,15 @@ namespace FizzBuzzApp.Controllers
                 return View();
             }
 
-             var sessionModel = _dataService.GetData<List<FizzBuzzModel>>(Constants.SessionKeys.FizzBuzzModelKey);
-
-
-            if (sessionModel != null && sessionModel.Count > 0)
-            {
-                _finalModel.AddRange(sessionModel);
-            }
+            _fizzBuzzModel = _fizzBuzzService.GetSavedSessionData() ?? new List<FizzBuzzModel>();
 
             var model = _fizzBuzzService.GenerateFizzBuzz(number);
-
             if (model != null && model.Count > 0)
             {
-                _finalModel.AddRange(model);
+                _fizzBuzzModel.AddRange(model);
             }
 
-            _dataService.SaveData<List<FizzBuzzModel>>(Constants.SessionKeys.FizzBuzzModelKey, _finalModel);
+            _fizzBuzzService.SaveModelData(_fizzBuzzModel);
 
             return RedirectToAction("Index");
         }
