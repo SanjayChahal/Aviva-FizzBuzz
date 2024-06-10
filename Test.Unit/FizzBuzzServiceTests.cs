@@ -31,7 +31,7 @@ namespace FizzBuzzApp.Tests
         }
 
         [Fact]
-        public void GenerateFizzBuzz_NumberDivisibleBy5_ReturnsBuzz()
+        public void GenerateFizzBuzz_NumberDivisibleBy5_ReturnsTuzz()
         {
             // Arrange
             var dateTimeProviderMock = new Mock<IDateTimeProvider>();
@@ -50,7 +50,7 @@ namespace FizzBuzzApp.Tests
         }
 
         [Fact]
-        public void GenerateFizzBuzz_NumberDivisibleBy3And5_ReturnsFizzBuzz()
+        public void GenerateFizzBuzz_NumberDivisibleBy3And5_ReturnsWizzWuzz()
         {
             // Arrange
             var dateTimeProviderMock = new Mock<IDateTimeProvider>();
