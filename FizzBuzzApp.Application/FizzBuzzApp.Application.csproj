@@ -7,21 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\" />
+    <None Remove="DTOs\" />
     <None Remove="Services\" />
-    <None Remove="Extention\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Folder Include="DTOs\" />
     <Folder Include="Services\" />
-    <Folder Include="Extention\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FizzBuzzApp.Infrastructure\FizzBuzzApp.Infrastructure.csproj" />
     <ProjectReference Include="..\FizzBuzzApp.Core\FizzBuzzApp.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
   </ItemGroup>
 </Project>
