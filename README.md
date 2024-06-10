@@ -8,10 +8,15 @@ FizzBuzzApp is a web application developed using ASP.NET Core MVC that allows us
 #### Onion Architecture
 The Onion Architecture is a layered architecture that emphasizes the separation of concerns, making the system more maintainable, testable, and scalable. The architecture consists of several layers:
 
-1. **Core Layer (Domain Layer)**: Contains the business logic and domain entities.
-2. **Service Layer**: Contains service interfaces and their implementations, handling the core application logic.
-3. **Infrastructure Layer**: Handles data access, external service integrations, and other infrastructure-related concerns.
-4. **Presentation Layer**: Contains the UI logic, controllers, and views.
+1. **Core Layer (Domain Layer) FizzBuzzApp.Core**: Contains the Business Logic Interfaces (contracts/abstractions) that define the application's core behavior and rules.
+2. **Infrastructure Layer (FizzBuzzApp.Infrastructure)**: Contains the concrete Implementation classes that implement the Business Logic Interfaces defined in the Core Layer.
+3. **Application Layer (FizzBuzzApp.Infrastructure)**: Contains service interfaces and their implementations, handling the core application logic.
+4. **Presentation Layer (FizzBuzzApp.Web)**:  Contains the UI logic, controllers, and views.
+
+Note   >> The Core Layer should be agnostic of any external dependencies or implementation details, promoting loose coupling and easier maintainability.
+The Infrastructure Layer depends on the Core Layer's Interfaces, but the Core Layer does not depend on the Infrastructure Layer's Implementations,
+adhering to the Dependency Inversion Principle.
+So in summary, while the Core/Domain Layer defines the Business Logic Interfaces, their concrete Implementation classes reside in the outer Infrastructure Layer of the Onion Architecture
 
 The dependencies in Onion Architecture flow inward, ensuring that the core logic is isolated from external concerns.
 
